@@ -1,9 +1,11 @@
 /*
  * 전화번호 관리 프로그램 구현 프로젝트
- * Version 0.6
+ * Version 0.7
  */
  
  import java.util.Scanner;
+ import java.util.HashSet;
+ import java.util.Iterator;
  
  interface INIT_MENU
  {
@@ -45,8 +47,19 @@
 	 public void showPhoneInfo()
 	 {
 		 System.out.println("name : " + name);
-		 System.out.println("phone : " + phoneNumber);
-		 System.out.println("*****");
+		 System.out.println("phone : " + phoneNumber);		 
+	 }
+	 public int hashCode()
+	 {
+		 return name.hashCode();
+	 }
+	 public boolean equals(Object obj)
+	 {
+		 PhoneInfo cmp=(PhoneInfo)obj;
+		 if(name.compareTo(cmp.name)==0)
+			 return true;
+		 else
+			 return false;
 	 }
  }
  
@@ -89,9 +102,11 @@
  
  class PhoneBookManager
  {
-	 final int MAX_CNT = 100;
-	 PhoneInfo[] infoStorage = new PhoneInfo[MAX_CNT];
-	 int curCnt=0;
+	 //final int MAX_CNT = 100;
+	 //PhoneInfo[] infoStorage = new PhoneInfo[MAX_CNT];
+	 //int curCnt=0;
+	 HashSet<PhoneInfo> infoStorage = new HashSet<PhoneInfo>();
+	 
 	 
 	 static PhoneBookManager inst = null;
 	 
@@ -165,16 +180,27 @@
 				break;
 		 }		 
 		 
-		 infoStorage[curCnt++] = info; 
-		 System.out.println("데이터 입력이 완료되었습니다. \n");
+		 //infoStorage[curCnt++] = info; 
+		 
+		 boolean isAdded = infoStorage.add(info);
+		 if(isAdded == true)
+		 {
+			 System.out.println("데이터 입력이 완료되었습니다. \n");
+		 }
+		 else
+		 {
+			 System.out.println("이미 저장된 데이터 입니다. \n");
+		 }
+		 
 	 }
 	 
 	 public void searchData()
 	 {
 		 System.out.println("데이터 검색을 시작합니다..");
+		 
 		 System.out.print("이름 : ");
 		 String name = MenuViewer.keyboard.nextLine();
-		 
+		 /*
 		 int dataIdx=search(name);
 		 if(dataIdx<0)
 		 {
@@ -186,6 +212,17 @@
 			 infoStorage[dataIdx].showPhoneInfo();
 			 System.out.println("데이터 검색이 완료되었습니다. \n");
 		 }
+		 */
+		 PhoneInfo info=search(name);
+		 if(info==null)
+		 {
+			 System.out.println("해당하는 데이터가 존재하지 않습니다. \n");
+		 }
+		 else
+		 {
+			 info.showPhoneInfo();
+			 System.out.println("데이터 검색이 완료되었습니다. \n");
+		 }
 	 }
 	 
 	 public void deleteData()
@@ -194,6 +231,8 @@
 		 
 		 System.out.print("이름 : ");
 		 String name = MenuViewer.keyboard.nextLine();
+		 
+		 /*
 		 int dataIdx=search(name);
 		 if(dataIdx<0)
 		 {
@@ -208,11 +247,24 @@
 			curCnt--;
 			System.out.println("데이터 삭제가 완료되었습니다. \n");
 		 }
-		 
+		 */
+		 Iterator<PhoneInfo> itr = infoStorage.iterator();
+		 while(itr.hasNext())
+		 {
+			 PhoneInfo curInfo = itr.next();
+			 if(name.compareTo(curInfo.name)==0)
+			 {
+				 itr.remove();
+				 System.out.println("데이터 삭제가 완료되었습니다.\n");
+				 return;
+			 }
+		 }
+		 System.out.println("해당하는 데이터가 존재하지 않습니다. \n");
 	 }
 	 
-	 private int search(String name)
+	 private PhoneInfo search(String name)
 	 {
+		 /*
 		 for(int idx=0;idx<curCnt;idx++)
 		 {
 			 PhoneInfo curInfo = infoStorage[idx];
@@ -220,6 +272,15 @@
 				 return idx;
 		 }
 		 return -1;
+		 */
+		 Iterator<PhoneInfo> itr= infoStorage.iterator();
+		 while(itr.hasNext())
+		 {
+			 PhoneInfo curInfo=itr.next();
+			 if(name.compareTo(curInfo.name)==0)
+				 return curInfo;
+		 }
+		 return null;
 	 }
  }
  
@@ -237,7 +298,7 @@
 	 }
  }
  
- class PhoneBookVer06
+ class PhoneBookVer07
  {
 	 public static void main(String[] args)
 	 {

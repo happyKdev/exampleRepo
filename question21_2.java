@@ -1,3 +1,7 @@
+
+
+
+
 class question21_2
 {
 	public <T> void simpleMethod(T param)
