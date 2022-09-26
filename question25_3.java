@@ -18,36 +18,31 @@ class MouseEventHandler implements MouseListener
 	public void mouseReleased(MouseEvent e){}
 }
 
-class FrameMouseEventHandler implements MouseListener
-{
-	public void mouseClicked(MouseEvent e)
-	{
-		System.out.println("JFrame상에서 마우스 버튼 눌렸다 풀림");
-	}
-	public void mouseEntered(MouseEvent e){}
-	public void mouseExited(MouseEvent e){}
-	public void mousePressed(MouseEvent e){}
-	public void mouseReleased(MouseEvent e){}
-}
-
-class MyJFrame extends JFrame
+class MyJFrame extends JFrame implements MouseListener
 {
 	public MyJFrame(String title)
 	{
 		super(title);
 		setBounds(120,120,400,100);
 		setLayout(new FlowLayout());
-		addMouseListener(new FrameMouseEventHandler());
+		addMouseListener(this);
 	}
+	public void mouseClicked(MouseEvent e)
+	{
+		System.out.println("JFrame상에서 마우스 버튼 눌렸다 풀림");
+	}
+	
+	public void mouseEntered(MouseEvent e){}
+	public void mouseExited(MouseEvent e){}
+	public void mousePressed(MouseEvent e){}
+	public void mouseReleased(MouseEvent e){}
 }
 
-class question25_2
+class question25_3
 {
 	public static void main(String[] args)
 	{
-		JFrame frm=new JFrame("First Swing");
-		
-
+		JFrame frm=new MyJFrame("First Swing");	
 		
 		JButton btn1=new JButton("My Button");
 		MouseListener listener = new MouseEventHandler();
